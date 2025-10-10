@@ -1,5 +1,10 @@
 #include "systemcalls.h"
-#include "errno.h"
+#include <stdarg.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <stdlib.h>
 
 /**
  * @param cmd the command to execute with system()
@@ -13,10 +18,10 @@ bool do_system(const char *cmd)
 
 	int ret = system(cmd);
 	
-	if ret == 0 {
-		return false;
+    if (ret == 0) {
+        return true;
 	} else {
-		return true;
+		return false;
 	}
 		
 }
@@ -53,9 +58,17 @@ bool do_exec(int count, ...)
 		return false;
 	} else if (pid == 0) {
 		execv(command[0],command);
-		return false;					//If it reaches here it fails 
-	} else {							//So return false
-		if (waitpid(pid, &status, 0) == -1) {
+		exit(1);  // Exit with error code					
+	} else {							
+        int status;
+		if (wait(&status) == -1) {
+            return false;
+        }
+        if (WIFEXITED(status) && WEXITSTATUS(status) == 0) {
+            va_end(args);
+            return true;
+        } else {
+            va_end(args);
             return false;
         }
 	}
@@ -80,17 +93,14 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
         command[i] = va_arg(args, char *);
     }
     command[count] = NULL;
+    
+    pid_t pid = fork();
  
-	if (fd < 0) { 
-		return false; 
-	}
-
 	if (pid < 0){
-
 		return false;
 	} else if (pid == 0) {
 		int fd = open(outputfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		 if (fd < 0) {
+		if (fd < 0) {
             // Failed to open file
             return false;
         }
@@ -103,6 +113,7 @@ bool do_exec_redirect(const char *outputfile, int count, ...)
 		execv(command[0],command);
 		return false;					//If it reaches here it fails 
 	} else {							//So return false
+		int status;
 		if (waitpid(pid, &status, 0) == -1) {
             return false;
         }
