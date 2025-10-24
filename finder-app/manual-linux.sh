@@ -60,13 +60,13 @@ fi
 
 echo "Adding the Image in outdir"
 # Copy the kernel image to the output directory
+mkdir ${OUTDIR}/Image
 cp ${OUTDIR}/linux-stable/arch/${ARCH}/boot/Image ${OUTDIR}/Image
 echo "Kernel image copied to ${OUTDIR}/Image"
 
 # Verify the image file
 if [ -f "${OUTDIR}/Image" ]; then
     echo "Kernel image exists: $(ls -la ${OUTDIR}/Image)"
-    file ${OUTDIR}/Image
 else
     echo "ERROR: Kernel image not found!"
     exit 1
