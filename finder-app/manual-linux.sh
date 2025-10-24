@@ -103,15 +103,31 @@ fi
 make ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE}
 make CONFIG_PREFIX=/${OUTDIR}/rootfs ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} install
 
-cd
-pwd
+MainPath=$(find / -name "RequiredFiles" 2>/dev/null)
+TestPath=~/assignments-3-and-later-Traxics/assignments-3-and-later-Traxics/finder-app/RequiredFiles
+
+# Determine which path to use for RequiredFiles
+if [ -n "$MainPath" ] && [ -d "$MainPath" ]; then
+    echo "Using MainPath: $MainPath"
+    RequiredFilesPath="$MainPath"
+elif [ -d "$TestPath" ]; then
+    echo "Using TestPath: $TestPath"
+    RequiredFilesPath="$TestPath"
+else
+    cd
+    echo "Current directory contents:"
+    ls -la
+    echo "$MainPath"
+    echo "$TestPath"
+    exit 1
+fi
 
 # TODO: Add library dependencies to rootfs
-cp Assignement3/finder-app/RequiredFiles/ld-linux-aarch64.so.1 "${OUTDIR}/rootfs/lib/"
+cp ${RequiredFilesPath}/ld-linux-aarch64.so.1 "${OUTDIR}/rootfs/lib/"
 ${CROSS_COMPILE}readelf -a ${OUTDIR}/rootfs/bin/busybox | grep "program interpreter"
-cp Assignement3/finder-app/RequiredFiles/libm.so.6 "${OUTDIR}/rootfs/lib64/"
-cp Assignement3/finder-app/RequiredFiles/libresolv.so.2 "${OUTDIR}/rootfs/lib64/"
-cp Assignement3/finder-app/RequiredFileslibc.so.6 "${OUTDIR}/rootfs/lib64/"
+cp ${RequiredFilesPath}/libm.so.6 "${OUTDIR}/rootfs/lib64/"
+cp ${RequiredFilesPath}/libresolv.so.2 "${OUTDIR}/rootfs/lib64/"
+cp ${RequiredFilesPath}/libc.so.6 "${OUTDIR}/rootfs/lib64/"
 ${CROSS_COMPILE}readelf -a ${OUTDIR}/rootfs/bin/busybox | grep "Shared library"
 
 # TODO: Make device nodes
