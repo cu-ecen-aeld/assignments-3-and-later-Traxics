@@ -135,18 +135,19 @@ sudo mknod -m 666 ${OUTDIR}/rootfs/dev/console c 5 1
 sudo mknod -m 666 ${OUTDIR}/rootfs/dev/null c 1 3
 
 # TODO: Clean and build the writer utility
-cd ~/coursera/Assignment3/finder-app/
+PathTofinderapp = $(find / -name "finder-app" 2>/dev/null)
+cd ${PathTofinderapp}
 make clean
 make
 
 # TODO: Copy the finder related scripts and executables to the /home directory
 # on the target rootfs
 cd "${OUTDIR}/rootfs/home"
-sudo cp ~/coursera/Assignment3/finder-app/autorun-qemu.sh "${OUTDIR}/rootfs/home"
-sudo cp ~/coursera/Assignment3/finder-app/finder-test.sh "${OUTDIR}/rootfs/home"
-sudo cp ~/coursera/Assignment3/finder-app/writer "${OUTDIR}/rootfs/home"
-sudo cp -rL ~/coursera/Assignment3/finder-app/conf "${OUTDIR}/rootfs/home"
-sudo cp ~/coursera/Assignment3/finder-app/finder.sh "${OUTDIR}/rootfs/home"
+sudo cp ${PathTofinderapp}/autorun-qemu.sh "${OUTDIR}/rootfs/home"
+sudo cp ${PathTofinderapp}/finder-test.sh "${OUTDIR}/rootfs/home"
+sudo cp ${PathTofinderapp}/writer "${OUTDIR}/rootfs/home"
+sudo cp -rL ${PathTofinderapp}/conf "${OUTDIR}/rootfs/home"
+sudo cp ${PathTofinderapp}/finder.sh "${OUTDIR}/rootfs/home"
 
 # TODO: Chown the root directory
 sudo chown -R root:root ${OUTDIR}/rootfs
