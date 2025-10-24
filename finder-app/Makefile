@@ -1,4 +1,7 @@
 # Cross-compilation support
+
+CROSS_COMPILE = aarch64-none-linux-gnu-
+
 ifdef CROSS_COMPILE
 CC=$(CROSS_COMPILE)gcc
 else
