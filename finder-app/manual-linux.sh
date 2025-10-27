@@ -135,7 +135,7 @@ sudo mknod -m 666 ${OUTDIR}/rootfs/dev/console c 5 1
 sudo mknod -m 666 ${OUTDIR}/rootfs/dev/null c 1 3
 
 # TODO: Clean and build the writer utility
-PathTofinderapp = $(find / -name "finder-app" 2>/dev/null)
+PathTofinderapp=$(find / -name "finder-app" 2>/dev/null)
 cd ${PathTofinderapp}
 make clean
 make
