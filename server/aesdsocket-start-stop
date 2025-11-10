@@ -1,11 +1,9 @@
-#!/bin/bash
+#!/bin/sh
 #
 # aesdsocket start-stop script
 # Uses start-stop-daemon to manage the aesdsocket daemon
 
-# Get the directory where this script is located
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DAEMON="${SCRIPT_DIR}/aesdsocket"
+DAEMON="/usr/bin/aesdsocket"
 DAEMON_NAME="aesdsocket"
 PIDFILE="/var/run/${DAEMON_NAME}.pid"
 
